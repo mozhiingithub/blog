@@ -1,49 +1,25 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 )
 
-type handler interface {
-	GetAddress() string
-	GetMethod() string
-	Handle(c *gin.Context)
+type handler struct {
+	path   string
+	method string
+	handle func(c *gin.Context)
 }
 
-type simplehandler struct{}
-
-func (s simplehandler) GetAddress() string {
-	return "/"
+func (h handler) GetPath() string {
+	return h.path
 }
 
-func (s simplehandler) GetMethod() string {
-	return "GET"
+func (h handler) GetMethod() string {
+	return h.method
 }
 
-func (s simplehandler) Handle(c *gin.Context) {
-	c.String(200, "123")
+func (h handler) GetHandle() func(c *gin.Context) {
+	return h.handle
 }
 
-type imghandler struct{}
-
-func (s imghandler) GetAddress() string {
-	return "/imgswskjw"
-}
-
-func (s imghandler) GetMethod() string {
-	return "POST"
-}
-
-func (s imghandler) Handle(c *gin.Context) {
-	c.String(200, "456")
-}
-
-var handleList = []handler{simplehandler{}, imghandler{}}
-
-func HandleList(engine *gin.Engine) {
-	for _, h := range handleList {
-		fmt.Println(h.GetMethod(), h.GetAddress())
-	}
-}
+var HandlerList = []handler{}
