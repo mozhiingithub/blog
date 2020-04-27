@@ -1,6 +1,7 @@
 package main
 
 import (
+	c "./cache"
 	d "./database"
 	"./handler"
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ func main() {
 	for _, h := range handler.HandlerList { // 注册各类handler
 		engine.Handle(h.GetMethod(), h.GetPath(), h.GetHandle())
 	}
+	defer c.CloseInstance() // 后台结束时，关闭redis连接池
 	defer d.CloseInstance() // 后台结束时，关闭数据库连接池
 	engine.Run()            // 启动引擎
 }
