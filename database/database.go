@@ -40,5 +40,7 @@ func GetInstance() *sql.DB {
 
 // CloseInstance 关闭数据库连接池实例
 func CloseInstance() {
-	db.Close()
+	if nil != db {
+		db.Close()
+	}
 }
