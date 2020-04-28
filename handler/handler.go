@@ -22,4 +22,5 @@ func (h handler) GetHandle() func(c *gin.Context) {
 	return h.handle
 }
 
-var HandlerList = []handler{manager}
+// HandlerList 储存handler的名目
+var HandlerList = []handler{manager, editor}
