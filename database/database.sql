@@ -1,3 +1,7 @@
+create database blog default charset utf8 collate utf8_general_ci;
+
+use blog;
+
 create table titles(
     id int(3) unsigned not null primary key auto_increment,
     title nvarchar(10) not null
