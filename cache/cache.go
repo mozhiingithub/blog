@@ -21,7 +21,7 @@ func GetInstance() *redis.Conn {
 	if nil == cache {
 		lock.Lock()
 		defer lock.Unlock()
-		if nil == db {
+		if nil == cache {
 			info := fmt.Sprintf("%s:%d", host, port)
 			cache, _ = redis.Dial(network, info)
 		}
