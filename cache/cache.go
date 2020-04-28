@@ -7,7 +7,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-var cache *redis.Conn
+var cache redis.Conn
 var lock *sync.Mutex = &sync.Mutex{}
 
 const (
@@ -17,7 +17,7 @@ const (
 )
 
 // GetInstance 获取redis连接池实例
-func GetInstance() *redis.Conn {
+func GetInstance() redis.Conn {
 	if nil == cache {
 		lock.Lock()
 		defer lock.Unlock()
