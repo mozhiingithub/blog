@@ -22,4 +22,4 @@ func (h handler) GetHandle() func(c *gin.Context) {
 	return h.handle
 }
 
-var HandlerList = []handler{}
+var HandlerList = []handler{manager}
