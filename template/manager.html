@@ -5,8 +5,21 @@
         <h1>管理中心</h1>
     </head>
     <body>
+        {{range $index,$ele := .blogList}}
+        <p>{{$index}}.
+            <a href={{$ele.id}}>{{$ele.title}}</a>
+            <form action={{$ele.id}} method="POST">
+                <input type="hidden" name="_method" value="PUT">
+                <button type="submit">修改</button>
+            </form>
+            <form action={{$ele.id}} method="POST">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit">删除</button>
+            </form>
+        </p>
+        {{end}}
         <form action="/editor" method="GET">
-            <button type="submit">发布</button>
+            <button type="submit">发布新博文</button>
         </form>
     </body>
 </html>
