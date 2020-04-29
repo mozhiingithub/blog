@@ -9,7 +9,7 @@ import (
 )
 
 var getArticle = handler{
-	path:   "/arcticle",
+	path:   "/article",
 	method: "GET",
 	handle: func(c *gin.Context) {
 		for {
