@@ -11,9 +11,9 @@ import (
 
 var editor = handler{
 	path:   "/editor",
-	method: "GET",
+	method: "POST",
 	handle: func(c *gin.Context) {
-		articleIDStr := c.DefaultQuery("id", "0") // 获取需编辑博文的id。发布新博文时，则不发送id号
+		articleIDStr := c.PostForm("id") // 获取需编辑博文的id。发布新博文时，则不发送id号
 		articleID, _ := strconv.Atoi(articleIDStr)
 		articleURL := fmt.Sprintf("/article?id=%d", articleID) // 博文URI
 		method := "POST"                                       // 对博文的方法。POST对应发布新博文，PUT对应更新原有博文
