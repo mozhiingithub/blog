@@ -23,4 +23,4 @@ func (h handler) GetHandle() func(c *gin.Context) {
 }
 
 // HandlerList 储存handler的名目
-var HandlerList = []handler{manager, editor, postArticle, getArticle, putArticle}
+var HandlerList = []handler{manager, editor, getArticle, editArticle}
