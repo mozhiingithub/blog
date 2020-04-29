@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	d "../database"
@@ -19,8 +20,9 @@ var manager = handler{
 			var rowTitle string
 			rows.Scan(&rowID, &rowTitle)
 			blogList = append(blogList, blog{
-				id:    rowID,
-				title: rowTitle,
+				Id:    fmt.Sprintf("/article?id=%d", rowID),
+				Edit:  fmt.Sprintf("/editor?id=%d", rowID),
+				Title: rowTitle,
 			})
 		}
 		c.HTML(http.StatusOK, "manager.html", gin.H{
@@ -30,6 +32,7 @@ var manager = handler{
 }
 
 type blog struct {
-	id    int
-	title string
+	Id    string
+	Edit  string
+	Title string
 }
