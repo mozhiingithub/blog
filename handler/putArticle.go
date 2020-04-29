@@ -70,7 +70,7 @@ var putArticle = handler{
 				tx.Rollback()
 				break
 			}
-			result = "发布成功"
+			result = "修改成功"
 			break
 		}
 		c.HTML(http.StatusOK, "result.html", gin.H{
