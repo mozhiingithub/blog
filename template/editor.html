@@ -6,9 +6,10 @@
         <h1>编辑器</h1>
     </head>
     <body>
-        <form action={{.articleURL}} method={{.method}}>
+        <form action={{.articleURL}} method="POST">
+            <input name="_method" type="hidden" value={{.method}}>
             标题：<br>
-            <input name="title" type="text" value={{.titleValue}} style="width: 500px;"><br>
+            <input name="title" type="text" style="width:500px;" value={{.titleValue}}><br>
             内容：<br>
             <textarea name="content" style="width: 800px;height: 800px;">{{.contentValue}}</textarea><br>
             <button type="submit">提交</button>
