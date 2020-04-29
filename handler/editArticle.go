@@ -14,6 +14,8 @@ var editArticle = handler{
 			postArticle.handle(c)
 		case "PUT":
 			putArticle.handle(c)
+		case "DELETE":
+			deleteArticle.handle(c)
 		}
 	},
 }
