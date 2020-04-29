@@ -17,19 +17,20 @@ var editor = handler{
 		articleID, _ := strconv.Atoi(articleIDStr)
 		articleURL := fmt.Sprintf("/article?id=%d", articleID) // 博文URI
 		method := "POST"                                       // 对博文的方法。POST对应发布新博文，PUT对应更新原有博文
-		titleValue := "在此处输入标题。。。"
-		contentValue := "在此处输入正文。。。"
-		if 0 != articleID { // id非0,表明不是发布新博文
-			db := d.GetInstance()                                                   // 获取数据库连接池实例
-			rows, _ := db.Query("select title from titles where id = ?", articleID) // 查询此博文是否存在
-			if rows.Next() {                                                        // 查询结果非空，表明此博文存在
-				rows.Scan(&titleValue)                                                     // 获取博文标题
-				rows, _ = db.Query("select content from contents where id = ?", articleID) // 查询博文正文
-				if rows.Next() {
-					rows.Scan(&contentValue) // 获取博文正文
-					method = "PUT"           // 确认此博文存在，将http方法改为PUT
-				}
+		titleValue := ""
+		contentValue := ""
+		for 0 != articleID { // id非0,表明不是发布新博文
+			var ok bool
+			titleValue, ok = d.GetTitle(articleID)
+			if !ok { // 库中没有该id
+				break
 			}
+			contentValue, ok = d.GetContent(articleID)
+			if !ok { // 库中没有该id对应的正文
+				break
+			}
+			method = "PUT" // 成功获取id对应标题和正文，将方法给为PUT，对应更新操作
+			break
 		}
 		c.HTML(http.StatusOK, "editor.html", gin.H{
 			"articleURL":   articleURL,
