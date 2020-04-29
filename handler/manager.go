@@ -21,7 +21,7 @@ var manager = handler{
 			rows.Scan(&rowID, &rowTitle)
 			blogList = append(blogList, blog{
 				Id:    fmt.Sprintf("/article?id=%d", rowID),
-				Edit:  fmt.Sprintf("/editor?id=%d", rowID),
+				Edit:  rowID,
 				Title: rowTitle,
 			})
 		}
@@ -33,6 +33,6 @@ var manager = handler{
 
 type blog struct {
 	Id    string
-	Edit  string
+	Edit  int
 	Title string
 }
