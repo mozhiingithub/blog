@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -13,7 +14,7 @@ var manager = handler{
 	method: "GET",
 	handle: func(c *gin.Context) {
 		blogList := make([]blog, 0)
-		db := d.GetInstance() // 获取数据库连接池实例
+		var db *sql.DB = d.GetInstance() // 获取数据库连接池实例
 		rows, _ := db.Query("select * from titles order by id desc")
 		for rows.Next() {
 			var rowID int
