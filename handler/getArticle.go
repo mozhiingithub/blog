@@ -10,7 +10,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-const expireSecond = 300
+const expireSecond = 60
 
 var getArticle = handler{
 	path:   "/article",
