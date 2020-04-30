@@ -1,11 +1,14 @@
 package handler
 
 import (
+	"database/sql"
 	"net/http"
 	"strconv"
 
+	ch "../cache"
 	d "../database"
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 )
 
 var deleteArticle = handler{
@@ -16,9 +19,9 @@ var deleteArticle = handler{
 		for {
 			articleIDStr := c.Query("id")
 			articleID, _ := strconv.Atoi(articleIDStr)
-			db := d.GetInstance() // 获取数据库连接池实例
-			tx, err := db.Begin() // 开启事务
-			if nil != err {       //无法开启事务
+			var db *sql.DB = d.GetInstance() // 获取数据库连接池实例
+			tx, err := db.Begin()            // 开启事务
+			if nil != err {                  //无法开启事务
 				result = "无法开启事务"
 				break
 			}
@@ -55,6 +58,14 @@ var deleteArticle = handler{
 			_, err = stmt.Exec(articleID) // 删除标题
 			if nil != err {               // 删除失败
 				result = "标题删除失败"
+				tx.Rollback()
+				break
+			}
+			// 删除完数据库相关内容，提交事务前，先行删除redis中的缓存
+			var rs redis.Conn = ch.GetInstance() // 获取redis实例
+			err = rs.Send("del", articleID)      // 删除缓存
+			if nil != err {                      // 缓存删除失败
+				result = "无法删除缓存"
 				tx.Rollback()
 				break
 			}
