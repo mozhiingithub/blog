@@ -39,11 +39,11 @@ var getArticle = handler{
 				}
 				// 获取博文阅读量并加一。
 				// 假设count中没有该id的阅读量值，则新建一个并加一
-				count, err := redis.String(rs.Do("hincrby", "count", articleID))
+				count, err := redis.Int(rs.Do("hincrby", "count", articleID, 1))
 				if nil != err { // 获取失败
 					break
 				}
-				m["count"] = count                       // 将阅读量添加到m中
+				m["count"] = strconv.Itoa(count)         // 将阅读量添加到m中
 				c.HTML(http.StatusOK, "article.html", m) // 将缓存传到博文展示页前端
 				return
 			}
@@ -69,8 +69,8 @@ var getArticle = handler{
 				result = "博文写入缓存失败"
 				break
 			}
-			count, err := redis.String(rs.Do("hincrby", "count", articleID))
-			if nil != err { // 获取失败
+			count, err := redis.Int(rs.Do("hincrby", "count", articleID, 1)) // 获取阅读量，加一
+			if nil != err {                                                  // 获取失败
 				result = "获取阅读量失败"
 				break
 			}
@@ -81,7 +81,7 @@ var getArticle = handler{
 				"title":   title,
 				"t":       t,
 				"content": content,
-				"count":   count,
+				"count":   strconv.Itoa(count),
 			})
 			return
 		}
