@@ -69,7 +69,7 @@ var putArticle = handler{
 			}
 			// 修改完数据库内容，提交事务前，先行删除redis中的缓存
 			var rs redis.Conn = ch.GetInstance() // 获取redis实例
-			err = rs.Send("del", articleID)      // 删除缓存
+			_, err = rs.Do("del", articleID)     // 删除缓存
 			if nil != err {                      // 缓存删除失败
 				result = "无法删除缓存"
 				tx.Rollback()

@@ -63,9 +63,9 @@ var getArticle = handler{
 			}
 
 			// 从数据库中获取博文内容，将其写入缓存
-			var rs redis.Conn = ch.GetInstance()                                          // 获取redis实例
-			err = rs.Send("hmset", articleID, "title", title, "t", t, "content", content) // 以id为key，写入一个hash
-			if nil != err {                                                               // 写入失败
+			var rs redis.Conn = ch.GetInstance()                                           // 获取redis实例
+			_, err = rs.Do("hmset", articleID, "title", title, "t", t, "content", content) // 以id为key，写入一个hash
+			if nil != err {                                                                // 写入失败
 				result = "博文写入缓存失败"
 				break
 			}
@@ -74,7 +74,7 @@ var getArticle = handler{
 				result = "获取阅读量失败"
 				break
 			}
-			rs.Send("expire", articleID, expireSecond) // 为该博文的缓存设置过期时间
+			rs.Do("expire", articleID, expireSecond) // 为该博文的缓存设置过期时间
 
 			// 将内容传到博文展示页前端
 			c.HTML(http.StatusOK, "article.html", gin.H{
