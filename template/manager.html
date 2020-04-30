@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>管理中心</title>
+    <h1>管理中心</h1>
+</head>
+
+<body>
+    {{range $index,$ele := .blogList}}
+    <p>
+        {{$index}}.<a href={{$ele.Id}}>{{$ele.Title}}</a>
+        <form action="/editor" method="POST">
+            <input type="hidden" name="id" value={{$ele.Edit}}>
+            <button type="submit">修改</button>
+        </form>
+        <form action={{$ele.Id}} method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit">删除</button>
+        </form>
+    </p>
+    {{end}}
+
+    <form action="/editor" method="POST">
+        <button type="submit">发布新博文</button>
+    </form>
+</body>
+
+</html>
