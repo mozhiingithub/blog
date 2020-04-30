@@ -1,11 +1,14 @@
 package handler
 
 import (
+	"database/sql"
 	"net/http"
 	"strconv"
 
+	ch "../cache"
 	d "../database"
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 )
 
 var putArticle = handler{
@@ -22,9 +25,9 @@ var putArticle = handler{
 				result = "标题或正文部分为空"
 				break
 			}
-			db := d.GetInstance() // 获取数据库连接池实例
-			tx, err := db.Begin() // 开启事务
-			if nil != err {       //无法开启事务
+			var db *sql.DB = d.GetInstance() // 获取数据库连接池实例
+			tx, err := db.Begin()            // 开启事务
+			if nil != err {                  //无法开启事务
 				result = "无法开启事务"
 				break
 			}
@@ -61,6 +64,14 @@ var putArticle = handler{
 			_, err = stmt.Exec(articleID) // 修改发布时间
 			if nil != err {               // 修改插入失败
 				result = "发布时间修改失败"
+				tx.Rollback()
+				break
+			}
+			// 修改完数据库内容，提交事务前，先行删除redis中的缓存
+			var rs redis.Conn = ch.GetInstance() // 获取redis实例
+			err = rs.Send("del", articleID)      // 删除缓存
+			if nil != err {                      // 缓存删除失败
+				result = "无法删除缓存"
 				tx.Rollback()
 				break
 			}
