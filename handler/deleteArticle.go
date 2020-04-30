@@ -69,6 +69,13 @@ var deleteArticle = handler{
 				tx.Rollback()
 				break
 			}
+			_, err = rs.Do("hdel", "count", articleID) // 删除博文阅读量数据
+			if nil != err {                            // 阅读量删除失败
+				result = "无法删除阅读量"
+				tx.Rollback()
+				break
+			}
+
 			err = tx.Commit() // 提交事务
 			if nil != err {   // 提交失败
 				result = "事务提交失败"
